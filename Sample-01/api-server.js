@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 const authConfig = require("./src/auth_config.json");
+var axios = require("axios").default;
 
 const app = express();
 
@@ -45,6 +46,23 @@ app.get("/api/external", checkJwt, (req, res) => {
   res.send({
     msg: "Your access token was successfully validated!",
   });
+
+  var options = {
+    method: 'POST',
+    url: 'https://back-farm-test.herokuapp.com/users',
+    data: {
+      "email": "alexey.sitalo@gmail.com",
+     "password": "12345ddd66"
+  },
+    //headers: {'content-type': 'application/json', authorization: 'Bearer ACCESS_TOKEN'}
+  };
+  
+  axios.request(options).then(function (response) {
+    console.log(response.data);
+  }).catch(function (error) {
+    console.error(error);
+  });
+
 });
 
 app.listen(port, () => console.log(`API Server listening on port ${port}`));
